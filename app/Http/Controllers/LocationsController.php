@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\Validator;
 class LocationsController extends Controller
 {
     /**
+     * Endpoint for adding locations
      * @param Request $request
      * @return array
-     * @return Response
      */
     public function addLocations(Request $request)
     {
@@ -24,7 +24,9 @@ class LocationsController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return ['status' => -1, 'msg' => $validator->errors()];
+            return response()->json([
+                'message' => $validator->errors()
+            ], 400);
         }
 
         $allLocations = [];
@@ -49,8 +51,9 @@ class LocationsController extends Controller
     }
 
     /**
+     * Endpoint for getting the nearest location to the one provided by user
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return array
      */
     public function getOneNearestLocation(Request $request)
     {
@@ -89,8 +92,9 @@ class LocationsController extends Controller
     }
 
     /**
+     * Endpoint for getting the nearest locations within the km range provided by user
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return array
      */
     public function getNearestLocations(Request $request)
     {
@@ -138,11 +142,12 @@ class LocationsController extends Controller
     }
 
     /**
+     * Counting the distance between two coordinates
      * @param $a
      * @param $b
      * @return float
      */
-    private function countDistance($a, $b)
+    private function countDistance($a, $b) :float
     {
         list($lat1, $lng1) = $a;
         list($lat2, $lng2) = $b;
